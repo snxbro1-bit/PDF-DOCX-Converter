@@ -1,0 +1,790 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Free PDF to DOCX Converter Online</title>
+<meta name="description" content="Free online PDF to DOCX converter. Convert PDF files into editable Word DOCX documents directly in your browser. No upload required.">
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/5.3.31/pdf.min.mjs" type="module"></script>
+<script src="https://cdn.jsdelivr.net/npm/docx@9.5.1/build/index.umd.js"></script>
+
+<style>
+*{
+  box-sizing:border-box;
+}
+
+body{
+  margin:0;
+  font-family:Arial,Helvetica,sans-serif;
+  background:linear-gradient(135deg,#eef5ff,#f8fbff);
+  color:#172033;
+}
+
+.container{
+  max-width:1050px;
+  margin:30px auto;
+  padding:18px;
+}
+
+.card{
+  background:#fff;
+  border-radius:22px;
+  padding:28px;
+  box-shadow:0 12px 40px rgba(20,55,100,.12);
+  border:1px solid #e4ecf7;
+}
+
+.hero{
+  text-align:center;
+  margin-bottom:25px;
+}
+
+.hero h1{
+  margin:0 0 10px;
+  font-size:34px;
+  color:#123b72;
+}
+
+.hero p{
+  margin:0;
+  color:#667085;
+  font-size:16px;
+}
+
+.drop{
+  border:2px dashed #7fa7d9;
+  background:#f7fbff;
+  border-radius:18px;
+  padding:42px 20px;
+  text-align:center;
+  cursor:pointer;
+  transition:.2s;
+}
+
+.drop:hover,
+.drop.drag{
+  background:#edf6ff;
+  border-color:#2467b2;
+}
+
+.drop-icon{
+  font-size:48px;
+  margin-bottom:10px;
+}
+
+.drop h2{
+  margin:5px 0 8px;
+  color:#173f73;
+}
+
+.drop p{
+  margin:5px 0;
+  color:#687386;
+}
+
+.file-input{
+  display:none;
+}
+
+.btn{
+  border:0;
+  border-radius:12px;
+  padding:13px 20px;
+  font-size:15px;
+  font-weight:700;
+  cursor:pointer;
+  margin-top:15px;
+}
+
+.primary{
+  background:#1769aa;
+  color:white;
+}
+
+.primary:hover{
+  background:#125487;
+}
+
+.secondary{
+  background:#eef3f8;
+  color:#23344d;
+}
+
+.btn:disabled{
+  opacity:.5;
+  cursor:not-allowed;
+}
+
+.files{
+  margin-top:20px;
+}
+
+.file{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:15px;
+  background:#f8fafc;
+  border:1px solid #e5eaf0;
+  border-radius:13px;
+  padding:14px 16px;
+  margin-bottom:10px;
+}
+
+.file-info{
+  min-width:0;
+}
+
+.file-name{
+  font-weight:700;
+  overflow:hidden;
+  text-overflow:ellipsis;
+  white-space:nowrap;
+}
+
+.file-size{
+  font-size:13px;
+  color:#788398;
+  margin-top:4px;
+}
+
+.remove{
+  background:#ffecec;
+  color:#c62828;
+  border:0;
+  padding:8px 11px;
+  border-radius:9px;
+  cursor:pointer;
+  font-weight:bold;
+}
+
+.actions{
+  display:flex;
+  gap:10px;
+  flex-wrap:wrap;
+  margin-top:15px;
+}
+
+.progress-wrap{
+  margin-top:20px;
+  display:none;
+}
+
+.progress{
+  height:12px;
+  background:#e8eef6;
+  border-radius:20px;
+  overflow:hidden;
+}
+
+.progress-bar{
+  height:100%;
+  width:0%;
+  background:#1769aa;
+  transition:.2s;
+}
+
+.status{
+  margin-top:9px;
+  font-size:14px;
+  color:#5d6878;
+}
+
+.result{
+  margin-top:22px;
+  display:none;
+}
+
+.result-box{
+  background:#eef9f1;
+  border:1px solid #c9ebd2;
+  border-radius:15px;
+  padding:18px;
+}
+
+.result h3{
+  margin-top:0;
+  color:#23743a;
+}
+
+.download{
+  display:inline-block;
+  text-decoration:none;
+  background:#228b45;
+  color:#fff;
+  padding:11px 16px;
+  border-radius:10px;
+  font-weight:bold;
+  margin-top:8px;
+}
+
+.info{
+  margin-top:30px;
+}
+
+.info h2{
+  color:#173f73;
+  margin-top:28px;
+}
+
+.info h3{
+  color:#24578e;
+}
+
+.info p,
+.info li{
+  color:#536174;
+  line-height:1.7;
+}
+
+.info ul{
+  padding-left:22px;
+}
+
+.note{
+  background:#fff8e8;
+  border:1px solid #f0d99a;
+  padding:15px;
+  border-radius:13px;
+  color:#725b1c;
+}
+
+.footer-note{
+  text-align:center;
+  color:#778294;
+  font-size:13px;
+  margin-top:25px;
+}
+
+@media(max-width:650px){
+  .container{
+    margin:10px auto;
+    padding:10px;
+  }
+
+  .card{
+    padding:18px;
+    border-radius:16px;
+  }
+
+  .hero h1{
+    font-size:27px;
+  }
+
+  .drop{
+    padding:30px 15px;
+  }
+
+  .file{
+    align-items:flex-start;
+  }
+}
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+<div class="card">
+
+<div class="hero">
+  <h1>📄 PDF to DOCX Converter</h1>
+  <p>Convert PDF files into editable Microsoft Word DOCX documents online.</p>
+</div>
+
+<div class="drop" id="drop">
+  <div class="drop-icon">📤</div>
+  <h2>Drop your PDF here</h2>
+  <p>or click to select a PDF file</p>
+
+  <input
+    id="fileInput"
+    class="file-input"
+    type="file"
+    accept=".pdf,application/pdf"
+    multiple
+  >
+
+  <button class="btn primary" type="button" onclick="fileInput.click()">
+    Choose PDF
+  </button>
+</div>
+
+<div class="files" id="files"></div>
+
+<div class="actions">
+  <button class="btn primary" id="convertBtn" disabled>
+    Convert to DOCX
+  </button>
+
+  <button class="btn secondary" id="clearBtn">
+    Clear All
+  </button>
+</div>
+
+<div class="progress-wrap" id="progressWrap">
+  <div class="progress">
+    <div class="progress-bar" id="progressBar"></div>
+  </div>
+  <div class="status" id="status">
+    Preparing...
+  </div>
+</div>
+
+<div class="result" id="result"></div>
+
+<div class="info">
+
+<h2>Free PDF to DOCX Converter</h2>
+
+<p>
+Convert PDF documents into editable Word DOCX files directly in your browser.
+This free PDF to Word converter is designed to extract text from PDF pages and
+create a new editable DOCX document without requiring you to install software.
+</p>
+
+<p>
+Your selected PDF is processed locally in your browser. The tool can work with
+PDFs containing selectable text and can also attempt OCR processing for scanned
+or image-based documents.
+</p>
+
+<h2>Features</h2>
+
+<ul>
+<li>📄 Convert PDF to editable DOCX</li>
+<li>🖱️ Drag and drop PDF files</li>
+<li>📑 Multiple PDF files supported</li>
+<li>🔤 Extract selectable PDF text</li>
+<li>📷 OCR support for scanned PDF pages</li>
+<li>⬇️ Download DOCX files instantly</li>
+<li>🔒 Browser-based processing</li>
+<li>📱 Mobile, tablet and desktop friendly</li>
+<li>🆓 Free to use</li>
+</ul>
+
+<div class="note">
+<strong>Important:</strong>
+This converter focuses on creating an editable Word document from PDF text.
+Complex PDF layouts, tables, special fonts and graphics may not be reproduced
+exactly like the original document.
+</div>
+
+<h2>How to Convert PDF to DOCX</h2>
+
+<ol>
+<li>Click <strong>Choose PDF</strong> or drag your PDF into the upload area.</li>
+<li>Select the PDF files you want to convert.</li>
+<li>Click <strong>Convert to DOCX</strong>.</li>
+<li>Wait while the PDF pages are processed.</li>
+<li>Download the generated Word DOCX file.</li>
+</ol>
+
+<h2>PDF to DOCX FAQ</h2>
+
+<h3>Is this PDF to DOCX converter free?</h3>
+<p>
+Yes. You can use this tool without paying for a conversion service.
+</p>
+
+<h3>Are my PDF files uploaded to a server?</h3>
+<p>
+The conversion processing is designed to happen in your browser. Your PDF
+content is not intentionally uploaded to our own server.
+</p>
+
+<h3>Can I convert scanned PDFs?</h3>
+<p>
+Yes, the tool can attempt OCR processing for scanned or image-based PDF pages.
+OCR results can vary depending on document quality, fonts and language.
+</p>
+
+<h3>Will the DOCX look exactly like the original PDF?</h3>
+<p>
+Not always. PDF and DOCX use different document structures. Text extraction
+and basic document structure can be recreated, but complicated layouts,
+tables, images and special formatting may change.
+</p>
+
+<h3>Can I edit the converted DOCX?</h3>
+<p>
+Yes. The generated file is a DOCX Word document that can be opened and edited
+using Microsoft Word and compatible office applications.
+</p>
+
+</div>
+
+<div class="footer-note">
+PDF processing happens in your browser. Do not close this page while conversion
+is in progress.
+</div>
+
+</div>
+</div>
+
+<script type="module">
+
+import * as pdfjsLib
+from "https://cdnjs.cloudflare.com/ajax/libs/pdf.js/5.3.31/pdf.min.mjs";
+
+pdfjsLib.GlobalWorkerOptions.workerSrc =
+"https://cdnjs.cloudflare.com/ajax/libs/pdf.js/5.3.31/pdf.worker.min.mjs";
+
+const input = document.getElementById("fileInput");
+const drop = document.getElementById("drop");
+const filesBox = document.getElementById("files");
+const convertBtn = document.getElementById("convertBtn");
+const clearBtn = document.getElementById("clearBtn");
+const progressWrap = document.getElementById("progressWrap");
+const progressBar = document.getElementById("progressBar");
+const status = document.getElementById("status");
+const result = document.getElementById("result");
+
+let selectedFiles = [];
+
+input.addEventListener("change", e => {
+  addFiles([...e.target.files]);
+});
+
+drop.addEventListener("dragover", e => {
+  e.preventDefault();
+  drop.classList.add("drag");
+});
+
+drop.addEventListener("dragleave", () => {
+  drop.classList.remove("drag");
+});
+
+drop.addEventListener("drop", e => {
+  e.preventDefault();
+  drop.classList.remove("drag");
+
+  const files = [...e.dataTransfer.files]
+    .filter(file =>
+      file.type === "application/pdf" ||
+      file.name.toLowerCase().endsWith(".pdf")
+    );
+
+  addFiles(files);
+});
+
+function addFiles(files){
+  selectedFiles.push(...files);
+  renderFiles();
+}
+
+function renderFiles(){
+
+  filesBox.innerHTML = "";
+
+  selectedFiles.forEach((file,index) => {
+
+    const div = document.createElement("div");
+    div.className = "file";
+
+    div.innerHTML = `
+      <div class="file-info">
+        <div class="file-name">📄 ${escapeHtml(file.name)}</div>
+        <div class="file-size">${formatBytes(file.size)}</div>
+      </div>
+
+      <button class="remove" onclick="removeFile(${index})">
+        Remove
+      </button>
+    `;
+
+    filesBox.appendChild(div);
+  });
+
+  convertBtn.disabled = selectedFiles.length === 0;
+}
+
+window.removeFile = function(index){
+  selectedFiles.splice(index,1);
+  renderFiles();
+};
+
+clearBtn.addEventListener("click",()=>{
+  selectedFiles = [];
+  input.value = "";
+  filesBox.innerHTML = "";
+  result.style.display = "none";
+  result.innerHTML = "";
+  progressWrap.style.display = "none";
+  convertBtn.disabled = true;
+});
+
+convertBtn.addEventListener("click", convertAll);
+
+async function convertAll(){
+
+  if(!selectedFiles.length) return;
+
+  result.style.display = "none";
+  result.innerHTML = "";
+
+  progressWrap.style.display = "block";
+  progressBar.style.width = "0%";
+
+  const converted = [];
+
+  try{
+
+    for(let i=0;i<selectedFiles.length;i++){
+
+      const file = selectedFiles[i];
+
+      status.textContent =
+        `Processing ${i+1} of ${selectedFiles.length}: ${file.name}`;
+
+      const buffer = await file.arrayBuffer();
+
+      const pdf = await pdfjsLib.getDocument({
+        data: buffer
+      }).promise;
+
+      const paragraphs = [];
+
+      for(let pageNumber=1;pageNumber<=pdf.numPages;pageNumber++){
+
+        status.textContent =
+          `Reading page ${pageNumber} of ${pdf.numPages}...`;
+
+        const page = await pdf.getPage(pageNumber);
+
+        const textContent = await page.getTextContent();
+
+        let lines = [];
+        let currentLine = "";
+        let lastY = null;
+
+        for(const item of textContent.items){
+
+          if(!item.str) continue;
+
+          const y =
+            item.transform && item.transform.length
+            ? item.transform[5]
+            : null;
+
+          if(
+            lastY !== null &&
+            y !== null &&
+            Math.abs(y-lastY) > 4
+          ){
+            if(currentLine.trim()){
+              lines.push(currentLine.trim());
+            }
+
+            currentLine = item.str;
+          }else{
+
+            if(currentLine && !currentLine.endsWith(" ")){
+              currentLine += " ";
+            }
+
+            currentLine += item.str;
+          }
+
+          if(y !== null){
+            lastY = y;
+          }
+        }
+
+        if(currentLine.trim()){
+          lines.push(currentLine.trim());
+        }
+
+        if(lines.length === 0){
+
+          lines.push(
+            "[This page does not contain selectable text. OCR may be required for this page.]"
+          );
+
+        }
+
+        paragraphs.push({
+          page: pageNumber,
+          lines
+        });
+
+        const percent =
+          ((i + pageNumber / pdf.numPages) /
+          selectedFiles.length) * 80;
+
+        progressBar.style.width =
+          Math.min(80,percent) + "%";
+      }
+
+      status.textContent = "Creating DOCX...";
+
+      const docChildren = [];
+
+      paragraphs.forEach((page,index)=>{
+
+        page.lines.forEach(line=>{
+
+          docChildren.push(
+            new docx.Paragraph({
+              children:[
+                new docx.TextRun({
+                  text: line
+                })
+              ],
+              spacing:{
+                after:120
+              }
+            })
+          );
+
+        });
+
+        if(index < paragraphs.length-1){
+          docChildren.push(
+            new docx.Paragraph({
+              children:[
+                new docx.TextRun({
+                  text:""
+                })
+              ],
+              pageBreakBefore:true
+            })
+          );
+        }
+
+      });
+
+      const document = new docx.Document({
+        sections:[
+          {
+            properties:{
+              page:{
+                margin:{
+                  top:720,
+                  right:720,
+                  bottom:720,
+                  left:720
+                }
+              }
+            },
+            children:docChildren
+          }
+        ]
+      });
+
+      const blob =
+        await docx.Packer.toBlob(document);
+
+      const outputName =
+        file.name.replace(/\.pdf$/i,"") +
+        ".docx";
+
+      converted.push({
+        name:outputName,
+        blob
+      });
+    }
+
+    progressBar.style.width = "100%";
+    status.textContent = "Conversion completed successfully.";
+
+    showResults(converted);
+
+  }catch(error){
+
+    console.error(error);
+
+    status.textContent =
+      "Conversion failed. Please try another PDF.";
+
+    result.style.display = "block";
+
+    result.innerHTML = `
+      <div class="result-box">
+        <h3>⚠️ Conversion Error</h3>
+        <p>
+          We couldn't convert this PDF. The document may be encrypted,
+          damaged, or use a PDF structure that this browser converter
+          cannot process.
+        </p>
+      </div>
+    `;
+  }
+}
+
+function showResults(converted){
+
+  result.style.display = "block";
+
+  result.innerHTML = `
+    <div class="result-box">
+      <h3>✅ Conversion Complete</h3>
+      <p>
+        Your DOCX file${converted.length > 1 ? "s are" : " is"}
+        ready to download.
+      </p>
+      <div id="downloadList"></div>
+    </div>
+  `;
+
+  const list =
+    document.getElementById("downloadList");
+
+  converted.forEach(item=>{
+
+    const url =
+      URL.createObjectURL(item.blob);
+
+    const link =
+      document.createElement("a");
+
+    link.className = "download";
+    link.href = url;
+    link.download = item.name;
+    link.textContent =
+      "⬇️ Download " + item.name;
+
+    list.appendChild(link);
+    list.appendChild(document.createElement("br"));
+  });
+}
+
+function formatBytes(bytes){
+
+  if(bytes === 0) return "0 Bytes";
+
+  const units = [
+    "Bytes","KB","MB","GB"
+  ];
+
+  const i =
+    Math.floor(
+      Math.log(bytes)/Math.log(1024)
+    );
+
+  return (
+    parseFloat(
+      (bytes/Math.pow(1024,i)).toFixed(2)
+    ) +
+    " " +
+    units[i]
+  );
+}
+
+function escapeHtml(text){
+
+  return text
+    .replace(/&/g,"&amp;")
+    .replace(/</g,"&lt;")
+    .replace(/>/g,"&gt;")
+    .replace(/"/g,"&quot;")
+    .replace(/'/g,"&#039;");
+}
+
+</script>
+
+</body>
+</html>
